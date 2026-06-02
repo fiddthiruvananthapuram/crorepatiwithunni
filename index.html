@@ -3,34 +3,162 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Crorepati with Unni — MARK 1</title>
+<title>Crorepati with Unni</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', sans-serif; background: #0a1628; }
-  .portal { background: linear-gradient(135deg, #0a1628 0%, #1a0a2e 50%, #0d1f0a 100%); min-height: 100vh; color: white; font-family: 'Segoe UI', sans-serif; position: relative; overflow: hidden; }
+  .portal { background: linear-gradient(135deg, #0a1628 0%, #1a0a2e 50%, #0d1f0a 100%); min-height: 100vh; color: white; position: relative; overflow: hidden; }
+
   .floating-symbol { position: fixed; font-size: 48px; opacity: 0.08; animation: floatUp 6s infinite linear; pointer-events: none; }
   @keyframes floatUp { 0% { transform: translateY(0px) rotate(0deg); opacity: 0.08; } 50% { opacity: 0.15; } 100% { transform: translateY(-80px) rotate(20deg); opacity: 0; } }
-  .header-bar { background: linear-gradient(90deg, #c8a000, #ffd700, #c8a000); padding: 6px 20px; text-align: center; font-size: 11px; font-weight: 700; color: #1a0a00; letter-spacing: 1px; text-transform: uppercase; }
-  .main-header { background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%); padding: 20px 24px 14px; text-align: center; position: relative; }
-  .unni-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #ffd700, #ff8c00); display: inline-flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 8px; border: 3px solid #ffd700; box-shadow: 0 0 20px rgba(255,215,0,0.5); }
-  .site-title { font-size: 32px; font-weight: 900; background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.1; margin-bottom: 4px; }
-  .tagline { font-size: 11px; color: #aaffaa; font-style: italic; margin-bottom: 10px; letter-spacing: 0.5px; }
-  .invest-badge { display: inline-block; background: linear-gradient(90deg, #ff4444, #ff0000); color: white; font-size: 13px; font-weight: 800; padding: 8px 20px; border-radius: 20px; letter-spacing: 0.5px; border: 2px solid #ff8888; animation: pulse 2s infinite; }
+
+  /* NAV TABS */
+  .nav-bar {
+    background: rgba(0,0,0,0.55);
+    border-bottom: 1px solid rgba(255,215,0,0.18);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    z-index: 20;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .nav-bar::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.55);
+    padding: 11px 15px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+  }
+  .nav-tab:hover { color: #ffd700; }
+  .nav-tab.active { color: #ffd700; border-bottom-color: #ffd700; }
+  .nav-spacer { flex: 1; }
+  .nav-login-btn {
+    background: linear-gradient(90deg, #ffd700, #ff8c00);
+    color: #1a0a00;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 6px 16px;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+
+  .header-bar { background: linear-gradient(90deg, #c8a000, #ffd700, #c8a000); padding: 6px 20px; text-align: center; font-size: 11px; font-weight: 700; color: #1a0a00; letter-spacing: 1px; text-transform: uppercase; position: relative; z-index: 10; }
+
+  /* HERO */
+  .main-header {
+    background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+    padding: 28px 24px 18px;
+    text-align: center;
+    position: relative;
+    z-index: 5;
+  }
+  .hero-rupee-symbol {
+    font-size: 64px;
+    line-height: 1;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 18px rgba(255,215,0,0.5));
+    display: block;
+    font-weight: 900;
+  }
+  .site-title {
+    font-size: 52px;
+    font-weight: 900;
+    background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.05;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .tagline { font-size: 12px; color: #aaffaa; font-style: italic; margin-bottom: 14px; letter-spacing: 0.5px; }
+  .invest-badge { display: inline-block; background: linear-gradient(90deg, #ff4444, #ff0000); color: white; font-size: 13px; font-weight: 800; padding: 9px 24px; border-radius: 20px; letter-spacing: 0.5px; border: 2px solid #ff8888; animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,68,68,0.4); } 50% { transform: scale(1.03); box-shadow: 0 0 0 8px rgba(255,68,68,0); } }
-  .main-content { display: grid; grid-template-columns: 1fr 200px; gap: 14px; padding: 10px 16px 14px; }
+
+  .ticker-bar { background: rgba(0,0,0,0.5); border-top: 1px solid rgba(255,215,0,0.2); border-bottom: 1px solid rgba(255,215,0,0.2); padding: 5px 0; overflow: hidden; white-space: nowrap; position: relative; z-index: 5; }
+  .ticker-inner { display: inline-block; animation: ticker 20s linear infinite; font-size: 10px; color: #ffd700; letter-spacing: 0.5px; }
+  @keyframes ticker { 0% { transform: translateX(60vw); } 100% { transform: translateX(-100%); } }
+
+  /* WELCOME BAR */
+  .welcome-bar { display: none; background: linear-gradient(90deg, #003318, #004d22); border-bottom: 1px solid #00aa44; padding: 8px 20px; align-items: center; justify-content: space-between; position: relative; z-index: 10; }
+  .welcome-bar.show { display: flex; }
+  .welcome-text { font-size: 14px; font-weight: 700; color: #00ff88; }
+  .welcome-text span { color: #fff; }
+  .active-badge { background: #00ff88; color: #001a00; font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* MAIN GRID */
+  .main-content { display: grid; grid-template-columns: 1fr 210px; gap: 14px; padding: 12px 18px 64px; position: relative; z-index: 5; }
   .left-panel { display: flex; flex-direction: column; gap: 12px; }
-  .earnings-box { background: rgba(0,50,0,0.7); border: 2px solid #00cc44; border-radius: 10px; padding: 14px 16px; text-align: center; position: relative; overflow: hidden; }
-  .earnings-label { font-size: 11px; color: #88ff88; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; }
-  .earnings-amount { font-size: 44px; font-weight: 900; color: #00ff55; line-height: 1; text-shadow: 0 0 20px rgba(0,255,85,0.5); font-family: 'Courier New', monospace; transition: all 0.3s; }
-  .earnings-sub { font-size: 10px; color: #66dd66; margin-top: 4px; }
-  .pre-join-box { background: rgba(255,100,0,0.15); border: 2px solid #ff6600; border-radius: 10px; padding: 16px; text-align: center; }
-  .join-title { font-size: 13px; color: #ffaa44; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-  .join-input { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; padding: 8px 10px; color: white; font-size: 12px; margin-bottom: 8px; }
-  .join-btn { width: 100%; background: linear-gradient(90deg, #ffd700, #ff8c00); color: #1a0a00; font-weight: 900; font-size: 13px; padding: 10px; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+
   .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
   .stat-card { background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3); border-radius: 8px; padding: 8px; text-align: center; }
   .stat-num { font-size: 16px; font-weight: 900; color: #ffd700; }
   .stat-label { font-size: 9px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+  /* RAIN BOX */
+  .rain-box {
+    background: rgba(0,50,0,0.7);
+    border: 2px solid #00cc44;
+    border-radius: 10px;
+    padding: 20px 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .rain-symbol { position: absolute; color: #ffd700; pointer-events: none; opacity: 0; font-weight: 900; animation: rainDrop var(--rd, 2.5s) var(--rd2, 0s) infinite linear; }
+  @keyframes rainDrop { 0% { transform: translateY(-20px); opacity: 0; } 15% { opacity: 0.65; } 85% { opacity: 0.5; } 100% { transform: translateY(160px); opacity: 0; } }
+  .rain-lock { font-size: 30px; position: relative; z-index: 2; }
+  .rain-blurred { font-size: 46px; font-weight: 900; color: #00ff55; filter: blur(9px); opacity: 0.35; font-family: 'Courier New', monospace; line-height: 1; position: relative; z-index: 2; user-select: none; }
+  .rain-title { font-size: 15px; font-weight: 900; color: #ffd700; position: relative; z-index: 2; }
+  .rain-sub { font-size: 10px; color: rgba(255,255,255,0.5); line-height: 1.5; position: relative; z-index: 2; }
+  .rain-btn { background: linear-gradient(90deg, #ffd700, #ff8c00); color: #1a0a00; font-size: 12px; font-weight: 800; padding: 8px 20px; border-radius: 20px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.06em; position: relative; z-index: 2; animation: pulse 2s infinite; }
+
+  /* EARNINGS BOX */
+  .earnings-box { background: rgba(0,50,0,0.7); border: 2px solid #00cc44; border-radius: 10px; padding: 16px; text-align: center; position: relative; overflow: hidden; display: none; }
+  .earnings-label { font-size: 11px; color: #88ff88; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+  .earnings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 6px 0; }
+  .eg-cell { text-align: center; }
+  .eg-label { font-size: 9px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px; }
+  .eg-invested { font-size: 30px; font-weight: 900; color: rgba(255,255,255,0.7); font-family: 'Courier New', monospace; line-height: 1; }
+  .eg-earned { font-size: 48px; font-weight: 900; color: #00ff88; font-family: 'Courier New', monospace; line-height: 1; text-shadow: 0 0 24px rgba(0,255,136,0.45); }
+  .earnings-divider { height: 1px; background: rgba(0,255,136,0.15); margin: 8px 0; }
+  .profit-row { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 11px; color: #88ff88; }
+  .profit-val { font-weight: 800; color: #00ff88; font-family: 'Courier New', monospace; }
+  .profit-pct { background: rgba(0,255,136,0.15); color: #00ff88; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px; }
+  .joined-badge { display: none; background: linear-gradient(90deg, #00aa33, #00ff55); color: #001a00; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 12px; text-align: center; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .member-since { display: none; font-size: 9px; color: #88ff88; text-align: center; margin-top: 3px; }
+
+  /* FORM */
+  .pre-join-box { background: rgba(255,100,0,0.15); border: 2px solid #ff6600; border-radius: 10px; padding: 16px; text-align: center; }
+  .join-title { font-size: 13px; color: #ffaa44; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+  .join-input { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; padding: 8px 10px; color: white; font-size: 12px; margin-bottom: 8px; font-family: 'Segoe UI', sans-serif; outline: none; }
+  .join-input:focus { border-color: #ffd700; }
+  .join-btn { width: 100%; background: linear-gradient(90deg, #ffd700, #ff8c00); color: #1a0a00; font-weight: 900; font-size: 13px; padding: 10px; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* TESTIMONIALS */
   .right-panel { display: flex; flex-direction: column; gap: 8px; }
   .testimonials-title { font-size: 10px; color: #ffd700; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; text-align: center; padding-bottom: 6px; border-bottom: 1px solid rgba(255,215,0,0.3); }
   .testimonial-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 8px; }
@@ -40,17 +168,18 @@
   .test-location { font-size: 9px; color: rgba(255,255,255,0.45); }
   .test-comment { font-size: 9px; color: rgba(255,255,255,0.75); line-height: 1.4; }
   .test-amount { font-size: 11px; font-weight: 800; color: #00ff88; margin-top: 3px; }
-  .toggle-hint { text-align: center; padding: 8px; background: rgba(255,255,255,0.05); font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 1px; position: fixed; bottom: 0; width: 100%; }
-  .ticker-bar { background: rgba(0,0,0,0.5); border-top: 1px solid rgba(255,215,0,0.2); border-bottom: 1px solid rgba(255,215,0,0.2); padding: 5px 0; overflow: hidden; white-space: nowrap; }
-  .ticker-inner { display: inline-block; animation: ticker 18s linear infinite; font-size: 10px; color: #ffd700; letter-spacing: 0.5px; }
-  @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-  .joined-badge { display: none; background: linear-gradient(90deg, #00aa33, #00ff55); color: #001a00; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 12px; text-align: center; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
-  .member-since { display: none; font-size: 9px; color: #88ff88; text-align: center; margin-top: 3px; }
+
   .big-rupee { position: fixed; font-size: 80px; opacity: 0.04; pointer-events: none; font-weight: 900; color: #ffd700; }
+  .toggle-hint { text-align: center; padding: 8px; background: rgba(0,0,0,0.7); font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 1px; position: fixed; bottom: 0; width: 100%; z-index: 100; border-top: 1px solid rgba(255,215,0,0.1); }
+  @keyframes bgRupeeSpin {
+    0%   { transform: translate(-50%, -50%) rotateY(0deg); }
+    100% { transform: translate(-50%, -50%) rotateY(360deg); }
+  }
 </style>
 </head>
 <body>
-<div class="portal" id="portal">
+<div class="portal">
+
   <div class="big-rupee" style="right:10px;top:60px;">₹</div>
   <div class="big-rupee" style="left:-10px;bottom:80px;font-size:60px;">$</div>
   <div class="big-rupee" style="left:40%;top:40%;font-size:100px;">₹</div>
@@ -59,28 +188,98 @@
   <div class="floating-symbol" style="left:50%;top:75%;animation-delay:3s;">₹</div>
   <div class="floating-symbol" style="left:70%;top:85%;animation-delay:0.8s;">$</div>
   <div class="floating-symbol" style="left:88%;top:72%;animation-delay:2.2s;">₹</div>
-  <div class="header-bar">🔥 Limited Spots Left! 2,847 people earning RIGHT NOW • Join Unniettan's Circle of Wealth 🔥</div>
-  <div class="main-header">
-    <div class="unni-avatar">😎</div>
-    <div class="site-title">Crorepati with Unni</div>
-    <div class="tagline">"Why work hard when Unniettan works smart? Earn at home!"</div>
-    <div class="invest-badge">💰 Invest just ₹5,000 — Start Earning TODAY!</div>
+
+  <!-- NAV TABS -->
+  <nav class="nav-bar">
+    <div class="nav-tab active">Home</div>
+    <div class="nav-tab">About Us</div>
+    <div class="nav-tab">List of Tasks</div>
+    <div class="nav-tab">Trading Calls</div>
+    <div class="nav-tab">Career Opportunities</div>
+    <div class="nav-tab">Contact Us</div>
+    <div class="nav-spacer"></div>
+    <button class="nav-login-btn">Login / Join</button>
+  </nav>
+
+  <!-- Welcome bar (page 2) -->
+  <div class="welcome-bar" id="welcomeBar">
+    <div class="welcome-text">Welcome back, <span>Chandhu</span> 👋</div>
+    <div class="active-badge">✓ Active Member</div>
   </div>
-  <div class="ticker-bar"><span class="ticker-inner">&nbsp;&nbsp;&nbsp;Arun from Thrissur earned ₹87,000 this week! &nbsp;•&nbsp; Divya from Kozhikode: "Quit my IT job, no regrets!" &nbsp;•&nbsp; Vishnu from Ernakulam earned ₹1.2 Lakhs in 3 weeks! &nbsp;•&nbsp; Sreeja from Palakkad: "Bought a new phone. Thanks Unni!" &nbsp;•&nbsp; Jishnu from TVM earned ₹45,000 in 4 days! &nbsp;•&nbsp; Nimisha from Kannur: "My family is so proud now!" &nbsp;&nbsp;&nbsp;</span></div>
+
+  <div class="header-bar">🔥 Limited Spots Left! 2,847 people earning RIGHT NOW • Join Unniettan's Circle of Wealth 🔥</div>
+
+  <!-- HERO -->
+  <div class="main-header" style="position:relative; overflow:visible;">
+    <div style="
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotateY(0deg);
+      font-size: 300px;
+      font-weight: 900;
+      color: rgba(255,215,0,0.07);
+      pointer-events: none;
+      z-index: 0;
+      line-height: 1;
+      animation: bgRupeeSpin 5s linear infinite;
+    ">₹</div>
+
+    <span class="hero-rupee-symbol">₹</span>
+    <div class="site-title" style="position:relative;z-index:2;">Crorepati with Unni</div>
+    <div class="tagline" style="position:relative;z-index:2;">"Why work hard when Unniettan works smart? Earn at home!"</div>
+    <div class="invest-badge" style="position:relative;z-index:2;">💰 Invest just ₹5,000 — Start Earning TODAY!</div>
+  </div>
+
+  <div class="ticker-bar">
+    <span class="ticker-inner">
+      &nbsp;&nbsp;&nbsp;Arun from Thrissur earned ₹87,000 this week! &nbsp;•&nbsp; Divya from Kozhikode: "Quit my IT job, no regrets!" &nbsp;•&nbsp; Vishnu from Ernakulam earned ₹1.2 Lakhs in 3 weeks! &nbsp;•&nbsp; Sreeja from Palakkad: "Bought a new phone. Thanks Unni!" &nbsp;•&nbsp; Jishnu from TVM earned ₹45,000 in 4 days! &nbsp;•&nbsp; Nimisha from Kannur: "My family is so proud now!" &nbsp;&nbsp;&nbsp;
+    </span>
+  </div>
+
+  <!-- MAIN CONTENT -->
   <div class="main-content">
     <div class="left-panel">
+
       <div class="stats-row">
         <div class="stat-card"><div class="stat-num">12,408</div><div class="stat-label">Members</div></div>
         <div class="stat-card"><div class="stat-num">₹4.2 Cr</div><div class="stat-label">Total Paid Out</div></div>
         <div class="stat-card"><div class="stat-num">98.7%</div><div class="stat-label">Success Rate</div></div>
       </div>
-      <div class="earnings-box" id="earningsBox">
-        <div class="earnings-label" id="earningsLabel">💵 Your Earnings</div>
-        <div class="earnings-amount" id="earningsAmount">₹0</div>
-        <div class="earnings-sub" id="earningsSub">Join now to start earning!</div>
-        <div class="joined-badge" id="joinedBadge">✅ Active Member</div>
-        <div class="member-since" id="memberSince">Member since today</div>
+
+      <!-- PAGE 1: Rain box -->
+      <div class="rain-box" id="rainBox">
+        <div class="rain-lock">🔒</div>
+        <div class="rain-blurred">₹1,27,450</div>
+        <div class="rain-title">Sign Up to Reveal!</div>
+        <div class="rain-sub">Your potential earnings are waiting.<br>Join Unniettan's Inner Circle to unlock.</div>
+        <button class="rain-btn">💰 Sign Up &amp; Start Earning</button>
       </div>
+
+      <!-- PAGE 2: Earnings dashboard -->
+      <div class="earnings-box" id="earningsBox">
+        <div class="earnings-label">💵 Your Earnings Dashboard</div>
+        <div class="earnings-grid">
+          <div class="eg-cell">
+            <div class="eg-label">Amount Invested</div>
+            <div class="eg-invested">₹1,00,000</div>
+          </div>
+          <div class="eg-cell">
+            <div class="eg-label">Current Earnings</div>
+            <div class="eg-earned">₹3,22,657</div>
+          </div>
+        </div>
+        <div class="earnings-divider"></div>
+        <div class="profit-row">
+          <span>Total Profit:</span>
+          <span class="profit-val">+₹2,22,657</span>
+          <span class="profit-pct">▲ 222.7%</span>
+        </div>
+        <div class="joined-badge" id="joinedBadge">✅ Active Member</div>
+        <div class="member-since" id="memberSince">Member since June 2025</div>
+      </div>
+
+      <!-- PAGE 1: Join form -->
       <div class="pre-join-box" id="preJoinBox">
         <div class="join-title">🚀 Join Unniettan's Inner Circle</div>
         <input class="join-input" type="text" placeholder="Your Full Name" />
@@ -88,57 +287,83 @@
         <input class="join-input" type="text" placeholder="UPI ID / Bank Account" />
         <button class="join-btn">💰 Invest ₹5,000 &amp; Start Earning!</button>
       </div>
+
     </div>
+
+    <!-- TESTIMONIALS -->
     <div class="right-panel">
       <div class="testimonials-title">⭐ Success Stories</div>
-      <div class="testimonial-card"><div class="test-header"><div class="test-avatar">RK</div><div><div class="test-name">Rahul K.</div><div class="test-location">Thrissur</div></div></div><div class="test-comment">"Njan verum 2 aazhcha kondu ithra sambaadichu! Unni chettan best aanu."</div><div class="test-amount">Earned: ₹87,500 🤑</div></div>
-      <div class="testimonial-card"><div class="test-header"><div class="test-avatar">DM</div><div><div class="test-name">Divya M.</div><div class="test-location">Kozhikode</div></div></div><div class="test-comment">"IT job vittu. No regrets bro. Enikku ivide life aanu! Thanks Unni anna 🙏"</div><div class="test-amount">Earned: ₹1,24,000 💰</div></div>
-      <div class="testimonial-card"><div class="test-header"><div class="test-avatar">VS</div><div><div class="test-name">Vishnu S.</div><div class="test-location">Ernakulam</div></div></div><div class="test-comment">"Parents ku surprise gift vaaangi. Avar kandappol karachu. Unniettan thaan cause!"</div><div class="test-amount">Earned: ₹2,10,000 👑</div></div>
-      <div class="testimonial-card"><div class="test-header"><div class="test-avatar">NP</div><div><div class="test-name">Nimisha P.</div><div class="test-location">Kannur</div></div></div><div class="test-comment">"College ke kazhiyumbol office il pokanam ennu paranju. Ippol veetirunnu earn cheyyunnu 😍 Ty Unni!"</div><div class="test-amount">Earned: ₹56,200 ✨</div></div>
+      <div class="testimonial-card">
+        <div class="test-header"><div class="test-avatar">RK</div><div><div class="test-name">Rahul K.</div><div class="test-location">Thrissur</div></div></div>
+        <div class="test-comment">"Njan verum 2 aazhcha kondu ithra sambaadichu! Unni chettan best aanu."</div>
+        <div class="test-amount">Earned: ₹87,500 🤑</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="test-header"><div class="test-avatar">DM</div><div><div class="test-name">Divya M.</div><div class="test-location">Kozhikode</div></div></div>
+        <div class="test-comment">"IT job vittu. No regrets bro. Enikku ivide life aanu! Thanks Unni anna 🙏"</div>
+        <div class="test-amount">Earned: ₹1,24,000 💰</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="test-header"><div class="test-avatar">VS</div><div><div class="test-name">Vishnu S.</div><div class="test-location">Ernakulam</div></div></div>
+        <div class="test-comment">"Parents ku surprise gift vaaangi. Avar kandappol karachu. Unniettan thaan cause!"</div>
+        <div class="test-amount">Earned: ₹2,10,000 👑</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="test-header"><div class="test-avatar">NP</div><div><div class="test-name">Nimisha P.</div><div class="test-location">Kannur</div></div></div>
+        <div class="test-comment">"College ke kazhiyumbol office il pokanam ennu paranju. Ippol veetirunnu earn cheyyunnu 😍 Ty Unni!"</div>
+        <div class="test-amount">Earned: ₹56,200 ✨</div>
+      </div>
     </div>
   </div>
+
   <div class="toggle-hint" id="toggleHint">SPACEBAR to toggle view</div>
 </div>
+
 <script>
-  let isJoined = false, earningsInterval = null, currentEarnings = 0;
-  const TARGET = 127450;
-  function fmt(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
-  function startCounter() {
-    if (earningsInterval) clearInterval(earningsInterval);
-    currentEarnings = 89200;
-    document.getElementById('earningsAmount').textContent = fmt(currentEarnings);
-    earningsInterval = setInterval(() => {
-      if (currentEarnings < TARGET) { currentEarnings += Math.random()*180+40; if(currentEarnings>TARGET)currentEarnings=TARGET; document.getElementById('earningsAmount').textContent = fmt(currentEarnings); }
-    }, 120);
-  }
-  function stopCounter() { if(earningsInterval){clearInterval(earningsInterval);earningsInterval=null;} }
+  let isJoined = false;
+
+  // Inject rain symbols
+  const rainBox = document.getElementById('rainBox');
+  ['₹','₹','$','₹','₹','$','₹','$','₹','₹','$','₹'].forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'rain-symbol';
+    el.textContent = s;
+    el.style.setProperty('--rd',  (1.6 + Math.random() * 2.8).toFixed(1) + 's');
+    el.style.setProperty('--rd2', (Math.random() * 3.5).toFixed(1) + 's');
+    el.style.left = (Math.random() * 88) + '%';
+    el.style.fontSize = (14 + Math.random() * 16) + 'px';
+    rainBox.appendChild(el);
+  });
+
   function setPreJoin() {
-    isJoined=false; stopCounter();
-    document.getElementById('earningsAmount').textContent='₹0';
-    document.getElementById('earningsLabel').textContent='💵 Your Earnings';
-    document.getElementById('earningsSub').style.display='block';
-    document.getElementById('joinedBadge').style.display='none';
-    document.getElementById('memberSince').style.display='none';
-    document.getElementById('preJoinBox').style.display='block';
-    document.getElementById('earningsBox').style.borderColor='#00cc44';
-    document.getElementById('earningsAmount').style.color='#00ff55';
-    document.getElementById('earningsAmount').style.fontSize='44px';
-    document.getElementById('toggleHint').textContent='SPACEBAR → Switch to Joined View';
+    isJoined = false;
+    document.getElementById('welcomeBar').classList.remove('show');
+    document.getElementById('rainBox').style.display = 'flex';
+    document.getElementById('earningsBox').style.display = 'none';
+    document.getElementById('preJoinBox').style.display = 'block';
+    document.getElementById('joinedBadge').style.display = 'none';
+    document.getElementById('memberSince').style.display = 'none';
+    document.getElementById('toggleHint').textContent = "SPACEBAR → Switch to Chandhu's Dashboard";
   }
+
   function setJoined() {
-    isJoined=true;
-    document.getElementById('earningsLabel').textContent='💵 Your Earnings — LIVE';
-    document.getElementById('earningsSub').style.display='none';
-    document.getElementById('joinedBadge').style.display='block';
-    document.getElementById('memberSince').style.display='block';
-    document.getElementById('preJoinBox').style.display='none';
-    document.getElementById('earningsBox').style.borderColor='#00ff88';
-    document.getElementById('earningsAmount').style.color='#00ff88';
-    document.getElementById('earningsAmount').style.fontSize='48px';
-    document.getElementById('toggleHint').textContent='SPACEBAR → Switch to Pre-Join View';
-    startCounter();
+    isJoined = true;
+    document.getElementById('welcomeBar').classList.add('show');
+    document.getElementById('rainBox').style.display = 'none';
+    document.getElementById('earningsBox').style.display = 'block';
+    document.getElementById('preJoinBox').style.display = 'none';
+    document.getElementById('joinedBadge').style.display = 'block';
+    document.getElementById('memberSince').style.display = 'block';
+    document.getElementById('toggleHint').textContent = 'SPACEBAR → Switch to Pre-Join View';
   }
-  document.addEventListener('keydown',function(e){if(e.code==='Space'||e.key===' '){e.preventDefault();isJoined?setPreJoin():setJoined();}});
+
+  document.addEventListener('keydown', function(e) {
+    if (e.code === 'Space' || e.key === ' ') {
+      e.preventDefault();
+      isJoined ? setPreJoin() : setJoined();
+    }
+  });
+
   setPreJoin();
 </script>
 </body>
